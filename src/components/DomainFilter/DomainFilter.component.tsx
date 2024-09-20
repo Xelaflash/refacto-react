@@ -1,69 +1,33 @@
-import { useEffect, useState } from 'react';
-
-interface State {
-  countries: string[];
-  classifications: string[];
-  subClassifications: string[];
-}
+import { useParsedDomains } from '../../hooks/useParseddomains';
 
 interface Props {
   domains?: string[];
 }
 
-const DomainFilter = (props: Props) => {
-  const domains = props?.domains ?? [];
-  const countries: string[] = [];
-  const classifications: string[] = [];
-  const subClassifications: string[] = [];
-
-  let [state, setState] = useState<State>({
-    countries: [],
-    classifications: [],
-    subClassifications: [],
-  });
-
-  useEffect(() => {
-    for (let i = 0; i < domains.length; i++) {
-      if (countries.indexOf(domains[i].substring(0, 2)) <= 0) {
-        countries.push(domains[i].substring(0, 2));
-      }
-      classifications.push(domains[i].substring(3, 5));
-      let flag = false;
-      for (let j = 0; j < subClassifications.length; j++) {
-        if (subClassifications[j] === domains[i].substring(6)) {
-          flag = true;
-          break;
-        }
-      }
-      if (!flag) {
-        subClassifications.push(domains[i].substring(6));
-      }
-    }
-    setState({
-      countries: countries,
-      classifications: classifications.filter((e, i, l) => l.indexOf(e) === i),
-      subClassifications: subClassifications,
-    });
-  }, [domains]);
+const DomainFilter: React.FC<Props> = ({ domains = [] }) => {
+  const { countries, classifications, subClassifications } = useParsedDomains(domains);
 
   return (
     <>
+      <label htmlFor="countries">Countries: </label>
       <select name="countries" multiple>
-        {state.countries.map((country) => (
+        {countries.map((country) => (
           <option value={country} key={country}>
             {country}
           </option>
         ))}
       </select>
+      <label htmlFor="classifications">classifications: </label>
       <select name="classifications" multiple>
-        {state.classifications.map((classification) => (
+        {classifications.map((classification) => (
           <option value={classification} key={classification}>
             {classification}
           </option>
         ))}
       </select>
+      <label htmlFor="subClassifications">subClassifications: </label>
       <select name="subClassifications" multiple>
-        {state.subClassifications.map((subClassification) => (
+        {subClassifications.map((subClassification) => (
           <option value={subClassification} key={subClassification}>
             {subClassification}
           </option>
