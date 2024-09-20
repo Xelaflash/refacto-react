@@ -6,30 +6,22 @@ interface ParsedDomains {
   subClassifications: string[];
 }
 
-const parseDomains = (domains: string[]): ParsedDomains => {
-  const result: ParsedDomains = {
-    countries: [],
-    classifications: [],
-    subClassifications: [],
-  };
+const parseDomains = (domains: string[] = []): ParsedDomains => {
+  const countriesSet = new Set<string>();
+  const classificationsSet = new Set<string>();
+  const subClassificationsSet = new Set<string>();
 
   for (const domain of domains) {
-    const country = domain.substring(0, 2);
-    const classification = domain.substring(3, 5);
-    const subClassification = domain.substring(6);
-
-    if (!result.countries.includes(country)) {
-      result.countries.push(country);
-    }
-    if (!result.classifications.includes(classification)) {
-      result.classifications.push(classification);
-    }
-    if (!result.subClassifications.includes(subClassification)) {
-      result.subClassifications.push(subClassification);
-    }
+    countriesSet.add(domain.substring(0, 2));
+    classificationsSet.add(domain.substring(3, 5));
+    subClassificationsSet.add(domain.substring(6));
   }
 
-  return result;
+  return {
+    countries: Array.from(countriesSet),
+    classifications: Array.from(classificationsSet),
+    subClassifications: Array.from(subClassificationsSet),
+  };
 };
 
 export const useParsedDomains = (domains: string[] = []): ParsedDomains => {
