@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useParsedDomains } from '../../hooks/useParseddomains';
 
 interface Props {
